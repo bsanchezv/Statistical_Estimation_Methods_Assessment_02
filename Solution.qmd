@@ -26,7 +26,7 @@ Ejemplo 2: Deseamos hacer una encuesta de satisfacción de hogares que tienen se
 Rpta.
 
 | Dominio | Estrato |
-|------------------------------------|------------------------------------|
+|----|----|
 | Subdivisión de la población sobre el cual se obtienen resultados de forma desagregada | Subconjunto de la población que, en el ideal, son homogéneos por dentro y heterogéneos entre sí |
 | Se usa para obtener estimaciones específicas | Se usa para mejorar la precisión del muestreo, estimar de forma más precisa y reducir costos |
 | Suelen coincidir con áreas político-administrativas | Las unidades no están necesariamente en la misma área político-administrativa |
@@ -55,3 +55,37 @@ El muestreo aleatorio por conglomerados tiende a aumentar la precisión de las e
 # Parte III
 
 # Parte IV
+
+Responda, en no más de 500 palabras, cada una de las siguientes preguntas.
+
+**Pregunta 1**
+
+::: {style="text-align: justify;"}
+En el Ministerio de Desarrollo le han encargado a usted como muestrista principal diseñar una encuesta probabilística para medir la prevalencia de vulnerabilidad a la pobreza (variable dicotómica) en todas las regiones del Perú.
+
+Su supervisor, quien es un muy buen *policymaker* –pero sin ninguna formación cuantitativa ni de muestreo– se enteró sobre el libro de Dillman (2014) y las tablas de cálculo de tamaño de muestra. Él le solicita que justifique sus decisiones metodológicas pues argumenta que “como máximo se necesitaría una muestra de tamaño *n=1067* como se observa en la figura 3.5 de libro”.
+
+Usted ha planteado que se levante un muestreo complejo (estratificado y biétapico) para lograr el objetivo. Explique en un lenguaje **sencillo y de forma intuitiva** por qué necesitaría (o no) una muestra de mayor tamaño. Incluya en su respuesta el concepto de tamaño de muestra efectivo, correlación intracluster y efecto de diseño. Recuerde que su supervisor no maneja estos temas.
+:::
+
+::: {style="text-align: justify;"}
+Dillman (2014) es una referencia fundamental en la metodología de encuestas, ya que explica cómo los avances tecnológicos y sociales han modificado las estrategias tradicionales de recolección de datos. En una de sus tablas se presenta un tamaño de muestra de *n = 1067*, valor que corresponde a los cálculos derivados del **muestreo aleatorio simple (MAS)**. Este diseño supone condiciones ideales: independencia total entre las observaciones, ausencia de estratificación o agrupación y una sola estimación nacional.
+
+En el contexto de una encuesta destinada a medir la prevalencia de vulnerabilidad a la pobreza en todas las regiones del Perú, tales condiciones no se cumplen. El propósito de obtener resultados representativos por región requiere un **muestreo complejo, estratificado y bietápico**, que sea operativo, coste-efectivo y capaz de reflejar la heterogeneidad del territorio. Este tipo de diseño, aunque más viable logísticamente, es menos eficiente estadísticamente, por lo que se necesita un número mayor de entrevistas para mantener el mismo nivel de precisión.
+
+El **muestreo bietápico** consiste en seleccionar primero unidades geográficas amplias, como distritos o manzanas, y luego hogares o personas dentro de ellas. Este procedimiento facilita el trabajo de campo, pero introduce un fenómeno conocido como **correlación intraclúster**. En términos simples, las personas que habitan en un mismo conglomerado tienden a compartir características socioeconómicas similares, lo que genera cierta redundancia en la información recolectada. Así, diez entrevistas en un mismo barrio no equivalen, en términos informativos, a diez entrevistas dispersas en el país.
+
+La pérdida de eficiencia causada por esa similitud se mide mediante el **efecto de diseño (Deff)**, que indica cuánto aumenta la varianza del estimador en un diseño complejo respecto a un muestreo aleatorio simple. Si ambos diseños fueran igual de eficientes, el Deff sería 1.0; sin embargo, en encuestas nacionales bietápicas suele encontrarse entre 1.5 y 2.0, dependiendo del grado de homogeneidad de los conglomerados y del número de entrevistas por cada uno.
+
+El tamaño de muestra de *n = 1067* presentado por Dillman representa, en realidad, el **tamaño de muestra efectivo**, es decir, la cantidad de observaciones necesarias bajo un muestreo aleatorio simple para alcanzar una precisión determinada. Cuando se utiliza un diseño más complejo, el tamaño real debe ajustarse multiplicando el tamaño efectivo por el efecto de diseño:
+:::
+
+$$
+n_{real} = n_{efectivo} \times Deff
+$$
+
+::: {style="text-align: justify;"}
+Si se adopta un Deff conservador de 2,0, el tamaño de muestra requerido sería aproximadamente **2134** entrevistas.
+
+En conclusión, la cifra de **1067** propuesta en Dillman es válida solo para un muestreo aleatorio simple y una estimación nacional. Un estudio que busque resultados representativos por región, mediante un diseño estratificado y bietápico, necesita una muestra mayor para compensar la pérdida de eficiencia causada por la correlación intraclúster y el efecto de diseño, garantizando así resultados estadísticamente confiables para la toma de decisiones públicas.
+:::
