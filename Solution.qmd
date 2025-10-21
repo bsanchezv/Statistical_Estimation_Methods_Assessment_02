@@ -91,3 +91,57 @@ Si se adopta un Deff conservador de 2,0, el tamaño de muestra requerido sería 
 
 En conclusión, la cifra de 1067 propuesta en Dillman es válida solo para un muestreo aleatorio simple y una estimación nacional. Un estudio que busque resultados representativos por región, mediante un diseño estratificado y bietápico, necesita una muestra mayor para compensar la pérdida de eficiencia causada por la correlación intraclúster y el efecto de diseño, garantizando así resultados estadísticamente confiables para la toma de decisiones públicas.
 :::
+
+## **Pregunta 2**
+
+Un policymaker que cuenta con conocimientos intermedios de estadística le pide que utilice la Encuesta Nacional Agropecuaria más reciente para obtener estadísticas distritales de acceso a asistencia técnica en agricultores de Ayacucho. Estos datos serán utilizados en el diseño de un programa público de apoyo a los productores. Explique al funcionario si esto es posible y por qué. Considere en su respuesta mencionar qué tipo de técnicas, modelos y bases de datos adicionales se podrían utilizar para obtener estimaciones en estos dominios menores (distritos).
+
+------------------------------------------------------------------------
+
+La Encuesta Nacional Agropecuaria (ENA) ha sido diseñada para generar estimaciones representativas a nivel nacional y departamental. Por tanto, no es posible obtener estadísticas precisas a nivel distrital. La muestra de la ENA se selecciona de forma aleatoria e independiente en cada departamento, eligiendo segmentos del territorio mediante un muestreo sistemático con un inicio aleatorio. Este diseño ocasiona que a nivel distrital, muchos distritos carezcan de cobertura muestral suficiente, lo que se traduce en altos coeficientes de variación e impide obtener estimaciones confiables sobre el acceso a la asistencia técnica de los agricultores en el departamento de Ayacucho.
+
+El código que se presenta a continuación realiza una simulación exploratoria con la ENA 2024, estimando la proporción de productores (personas naturales) que recibieron asistencia técnica en los últimos tres años. Los resultados muestran que varios departamentos presentan coeficientes de variación superiores al 15%, lo que evidencia que incluso a nivel departamental existen estimaciones con baja precisión estadística. En el caso de Ayacucho, el coeficiente de variación estimado es de 9.8 %. Asimismo, en la ENA 2024, de los 109 distritos del departamento, solo 11 cuentan con unidades muestrales seleccionadas, lo que refuerza la falta de representatividad a nivel distrital.
+
+Esta situación representa una limitación importante frente a los requerimientos del diseño del programa público en mención. No obstante, existen alternativas metodológicas para abordar este problema.
+
+1.  Desde el enfoque clásico de estimación basada en el diseño muestral, una opción sería rediseñar la muestra para permitir inferencia a nivel distrital, al menos para los distritos del departamento de Ayacucho. Esto implicaría incrementar el tamaño muestral, lo cual supondría un aumento considerable de los costos asociados al levantamiento de la información.
+
+2.  Existen métodos más avanzados, como la estimación en áreas menores, que utilizan la información de la encuesta combinada con bases de datos auxiliares para obtener inferencias en niveles más desagregados. Sin embargo, estos métodos suelen requerir fuentes auxiliares extensas y actualizadas, como los censos nacionales. En este caso, el único censo agropecuario disponible corresponde al año 2012, cuya antigüedad limita su utilidad.
+
+```{r}
+library(survey)
+library(tidyverse)
+library(haven)
+
+
+df <-read_dta('data/15_CAP700.dta') 
+
+# filtrando a productores agropecuarios - persona natural
+df_persona <- df |> 
+  filter(CODIGO==1)
+
+# Creando variable categorica de la variable P701
+# EN LOS ÚLTIMOS 3 AÑOS, DE ……………… A………………, ¿UD. HA RECIBIDO CAPACITACIÓN?
+
+df_persona$capacitacion <- ifelse(df_persona$P701==1,1,0)
+
+# Para modificar el error de un estrato con una sola PSU
+options(survey.lonely.psu = "certainty")
+
+# Diseño muestral
+diseño <- svydesign(
+  id = ~NSEGM,                 # identificador del segmento (PSU)
+  strata = ~ESTRATO,           # variable de estratificación
+  weights = ~FACTOR_PRODUCTOR, # factor de expansión
+  data = df_persona,
+  nest = TRUE
+)
+
+# Proporción de agricultores capacitados por departamento
+res <- svyby(~capacitacion, ~NOMBREDD, diseño, svymean, na.rm = TRUE)
+res <- res |> 
+  mutate(capacitacion=round(capacitacion*100,2),
+         se=round(se,4),
+         coef_v=round((res$se / res$capacitacion) * 100,2))
+res
+```
