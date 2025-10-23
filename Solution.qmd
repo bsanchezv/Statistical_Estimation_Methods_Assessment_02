@@ -230,6 +230,417 @@ En conjunto, los resultados confirman que el muestreo aleatorio estratificado pr
 
 # Parte III
 
+# 1. Diseño muestral de la Encuesta Nacional sobre Relaciones Sociales (ENARES 2024)
+
+La Encuesta Nacional sobre Relaciones Sociales (ENARES 2024) es un estudio estadístico de carácter probabilístico y representativo a nivel nacional y departamental, orientado a generar información sobre los distintos tipos de violencia (física, psicológica y sexual) en mujeres, hombres, niñas, niños y adolescentes.
+
+En la ENARES 2024, se implementaron cuatro encuestas:
+
+-   **CRS.01:** Dirigida a mujeres de 18 años a más
+
+-   **CRS.02:** Dirigida a hombres y mujeres de 18 años a más
+
+-   **CRS.03:** Dirigida a niñas y niños de 9 a 11 años
+
+-   **CRS.04:** Dirigida a adolescentes de 12 a 17 años
+
+## 1.1. Encuesta en viviendas
+
+### 1.1.1. Marco muestral
+
+El marco de selección de la ENARES 2024 proviene de la cartografía y base estadística de los Censos Nacionales 2017: XII de Población, VII de Vivienda y III de Comunidades Indígenas.\
+Este marco proporciona la delimitación territorial y la relación actualizada de viviendas particulares ocupadas, diferenciadas por área urbana y rural, garantizando cobertura y consistencia en los dominios de inferencia.
+
+### 1.1.2. Unidades de muestreo
+
+El procedimiento muestral en viviendas se desarrolla en cuatro etapas:
+
+-   Unidad Primaria de Muestreo (UPM):
+    -   En el área urbana: conglomerado, conformado por una o más manzanas contiguas que en promedio agrupan 140 viviendas.
+    -   En el área rural: la UPM puede corresponder a un conglomerado rural o a un Área de Empadronamiento Rural (AER), con aproximadamente 100 viviendas.
+-   Unidad Secundaria de Muestreo (USM): viviendas particulares dentro de las UPM seleccionadas.
+-   Unidad Terciaria de Muestreo (UTM): hogar seleccionado dentro de la vivienda.
+-   Unidad Cuarta de Muestreo (UCM): persona seleccionada dentro del hogar (según población objetivo).
+
+### 1.1.3. Tipo de muestreo
+
+El diseño de la encuesta es probabilístico, estratificado, por áreas y multietápico, con independencia entre departamentos. Las etapas de selección se desarrollan de la siguiente manera:
+
+1.  Primera etapa: selección sistemática de UPM con probabilidad proporcional al tamaño (PPT).
+2.  Segunda etapa: selección sistemática simple de viviendas.
+3.  Tercera y cuarta etapa: selección aleatoria simple de hogares y personas.
+
+Asimismo, el diseño garantiza un nivel de confianza del 95% y un efecto de diseño (DEFF) de 1.2, considerando un ajuste por tasa de no respuesta (TNR).
+
+### 1.1.4. Cálculo del tamaño muestral
+
+Por su parte, el tamaño de muestra por departamento se determinó considerando el nivel de confianza, la variabilidad esperada del fenómeno, el margen de error permitido, la tasa de no respuesta y el efecto de diseño.\
+En este marco, el número de entrevistas se calculó con la siguiente expresión:
+
+$$
+n = \frac{Z^2pqN}{d^2(N - 1) + Z^2pq} \times DEFF \times \frac{1}{(1 - TNR)}
+$$
+
+Donde:
+
+-   *n* = tamaño muestral requerido en cada departamento
+-   *Z* = valor de la distribución normal (1.96 para 95% de confianza)
+-   *p* = proporción esperada del atributo en la población
+-   *q = 1 - p*
+-   *N* = tamaño poblacional del departamento
+-   *d* = margen de error
+-   *DEFF* = efecto de diseño (1.2
+-   *TNR* = tasa de no respuesta
+
+Para cada dominio departamental se ajustaron los valores de los parámetros según la confiabilidad estadística y las prevalencias previas de la ENARES 2019.
+
+**Distribución de la muestra por tipo de encuesta y área:**
+
+| Tipo de encuesta                            |  Total | Urbana | Rural |
+|---------------------------------------------|-------:|-------:|------:|
+| Mujeres de 18 años a más (CRS.01)           | 14,858 | 10,586 | 4,272 |
+| Hombres y mujeres de 18 años a más (CRS.02) |  9,556 |  6,796 | 2,760 |
+
+**Total:** 24,414 entrevistas en viviendas particulares a nivel nacional.
+
+### 1.1.5. Nivel de inferencia
+
+El diseño muestral permite realizar inferencias a nivel nacional y departamental. Para el caso del departamento de Lima, se establecieron tres dominios:
+
+1.  Provincia Constitucional del Callao
+2.  Lima Metropolitana, que comprende los 43 distritos de la provincia de Lima
+3.  Región Lima, conformada por las provincias de Barranca, Cajatambo, Canta, Cañete, Huaral, Huarochirí, Huaura, Oyón y Yauyos
+
+## 1.2. Encuesta en instituciones educativas
+
+### 1.2.1. Marco muestral
+
+El marco muestral para las encuestas escolares proviene del Padrón Nacional de Instituciones Educativas (MINEDU), que incluye la información actualizada de instituciones educativas activas de los niveles primario y secundario, tanto públicas como privadas. Este marco se organizó por departamento y área geográfica (urbana y rural), considerando el número de alumnos matriculados como medida del tamaño de la unidad primaria.
+
+### 1.2.2. Unidades de muestreo
+
+El proceso de selección en instituciones educativas comprende tres niveles:
+
+-   Unidad Primaria de Muestreo (UPM): institución educativa.
+-   Unidad Secundaria de Muestreo (USM): secciones de aula (4.º, 5.º y 6.º de primaria; 1.º a 5.º de secundaria).
+-   Unidad Terciaria de Muestreo (UTM): alumnos seleccionados dentro de las secciones.
+
+**Número de alumnos seleccionados por institución:**
+
+| Población objetivo | Alumnos por institución: Urbana | Alumnos por institución: Rural |
+|------------------------|-----------------------:|-----------------------:|
+| Niñas y niños de 9 a 11 años | 18 | 10 |
+| Adolescentes de 12 a 17 años | 20 | 10 |
+
+------------------------------------------------------------------------
+
+### 1.2.3. Tipo de muestreo
+
+El diseño es probabilístico, estratificado y trietápico, independiente en cada departamento.\
+La selección de instituciones educativas se realiza sistemáticamente con probabilidad proporcional al tamaño (PPT) en la primera etapa, mientras que las secciones y los alumnos se eligen aleatoriamente en las etapas siguientes (segunda y tercera).
+
+El estudio mantiene un nivel de confianza del 95 % y un efecto de diseño (DEFF) = 1.2.
+
+### 1.2.4. Cálculo del tamaño muestral
+
+La determinación del tamaño muestral se realizó aplicando la misma fórmula general:
+
+$$
+n = \frac{Z^2pqN}{d^2(N - 1) + Z^2pq} \times DEFF \times \frac{1}{(1 - TNR)}
+$$
+
+Para este dominio, se consideraron las prevalencias esperadas de violencia en el entorno escolar y familiar, así como las tasas esperadas de no respuesta en instituciones educativas.
+
+**Tamaño final de muestra en instituciones educativas:**
+
+| Tipo de encuesta | II.EE (total) | Alumnos (total) | Urbana (II.EE/alumnos) | Rural (II.EE/alumnos) |
+|---------------|--------------:|--------------:|--------------:|--------------:|
+| Niñas y niños 9–11 años (CRS.03) | 888 | 13,136 | 532 / 9,576 | 356 / 3,560 |
+| Adolescentes 12–17 años (CRS.04) | 1,118 | 19,100 | 792 / 15,840 | 326 / 3,260 |
+
+**Total nacional:** 2,006 instituciones educativas y 32,236 alumnos.
+
+## 1.3. Síntesis del diseño muestral
+
+El diseño muestral de la ENARES 2024 combina dos estrategias complementarias:\
+- una encuesta en viviendas, de carácter probabilístico y multietápico, y\
+- una encuesta en instituciones educativas, estructurada mediante muestreo trietápico estratificado.
+
+Ambos esquemas garantizan la representatividad nacional, departamental y urbano–rural de los resultados.
+
+# 2. Declaración del diseño muestral de la ENARES 2024
+
+## 2.1. Declaración del diseño muestral – CRS.01 (Viviendas)
+
+Para el módulo **CRS01_CAP100**, correspondiente a la Encuesta Nacional sobre Relaciones Sociales 2024 aplicada a mujeres de 18 años a más, se declara un diseño muestral complejo de tipo probabilístico, estratificado y multietápico.
+
+En este diseño: - La **unidad primaria de muestreo (UPM)** corresponde al *conglomerado (`CONGLOME`)*.\
+- El **estrato** se define combinando el *departamento (`CCDD`)* y el *tipo de área (`AREA`)*.\
+- El **peso muestral** o **factor de expansión** está dado por la variable *`FACTOR_VIV`*.
+
+A continuación, se presenta el procedimiento básico para declarar el diseño muestral en R usando el paquete `survey`.\
+Incluye la importación de la base, la creación del estrato, la verificación y la declaración del diseño.
+
+```{r}
+# Cargar librerías necesarias
+library(haven)
+library(dplyr)
+library(survey)
+options(survey.lonely.psu = "adjust")
+
+```
+
+```{r}
+# Importar la base CRS01_CAP100
+ruta <- "C:/Users/FABIOLA/Downloads/ENARES/976-Modulo1941/976-Modulo1941/01_CRS01_CAP100.dta"
+crs01 <- read_dta(ruta)
+```
+
+```{r}
+# Crear variable de estrato
+crs01 <- crs01 %>%
+  mutate(
+    ESTRATO = interaction(CCDD, AREA, drop = TRUE),
+    CONGLOME = as.factor(CONGLOME),
+    ESTRATO = as.factor(ESTRATO),
+    FACTOR_VIV = as.numeric(FACTOR_VIV)
+  )
+
+# Declarar el diseño muestral
+dis_crs01_cap100 <- svydesign(
+  ids = ~CONGLOME,        # Unidad primaria (conglomerado)
+  strata = ~ESTRATO,      # Estrato: Departamento × Área
+  weights = ~FACTOR_VIV,  # Factor de expansión
+  data = crs01,
+  nest = TRUE
+)
+```
+
+```{r}
+# Resumen del diseño
+summary(dis_crs01_cap100)
+
+# Validación rápida
+svytotal(~I(1), dis_crs01_cap100)    # Conteo expandido
+svytable(~AREA, dis_crs01_cap100)    # Distribución por área
+```
+
+#### Ejemplo de estimación:
+
+```{r}
+# Ejemplo de estimación: viviendas con Internet
+if("C1P110_4" %in% names(crs01)){
+  internet_est <- svymean(~I(C1P110_4 == 1), design = dis_crs01_cap100, na.rm = TRUE)
+  internet_est
+  confint(internet_est)
+}
+```
+
+## 2.2. Declaración del diseño muestral – CRS.01 (Mujeres)
+
+En el módulo individual *CRS01_CAP300*, correspondiente a la Encuesta Nacional sobre Relaciones Sociales 2024 dirigida a mujeres de 18 años a más, cada observación representa a una persona entrevistada dentro de un hogar seleccionado.\
+El diseño conserva la estructura jerárquica del muestreo por áreas y conglomerados, pero utiliza el **factor de expansión individual (`FACTOR_MUJ`)**, que permite obtener estimaciones representativas para la población femenina de 18 años a más, ajustadas por probabilidad de selección y tasa de no respuesta.
+
+A continuación, se presenta la declaración del diseño muestral en **R**, utilizando el paquete `survey`:
+
+```{r}
+# Cargar librerías
+library(haven)
+library(survey)
+library(dplyr)
+
+# Cargar base de datos del módulo individual (nivel persona)
+crs01_cap300 <- read_dta("C:/Users/FABIOLA/Downloads/ENARES/976-Modulo1943/976-Modulo1943/03_CRS01_CAP300.dta")
+
+# Crear variable de estrato (departamento + área)
+crs01_cap300 <- crs01_cap300 %>%
+  mutate(
+    ESTRATO = interaction(CCDD, AREA, drop = TRUE),
+    CONGLOME = as.factor(CONGLOME),
+    ESTRATO = as.factor(ESTRATO),
+    FACTOR_MUJ = as.numeric(FACTOR_MUJ)
+  )
+
+# Declarar el diseño muestral
+dis_crs01_cap300 <- svydesign(
+  ids = ~CONGLOME,
+  strata = ~ESTRATO,
+  weights = ~FACTOR_MUJ,
+  data = crs01_cap300,
+  nest = TRUE
+)
+
+# Verificar estructura del diseño
+dis_crs01_cap300
+
+```
+
+```{r}
+# Conteo expandido (total de mujeres representadas)
+svytotal(~I(1), dis_crs01_cap300)
+
+```
+
+#### Ejemplo de estimación:
+
+```{r}
+# Ejemplo: proporción de mujeres que están actualmente unidas (C1P302 == 2)
+union_est <- svymean(~I(C1P302 == 2), design = dis_crs01_cap300, na.rm = TRUE)
+union_est
+confint(union_est)
+
+```
+
+## 2.3. Declaración del diseño muestral – CRS.02 (Viviendas)
+
+La encuesta **CRS.02**, dirigida a hombres y mujeres de 18 años a más, mantiene el mismo esquema muestral que la CRS.01.
+
+```{r}
+# Cargar librerías
+library(haven)
+library(survey)
+
+# Importar la base CRS01_CAP100
+ruta3 <- "C:/Users/FABIOLA/Downloads/ENARES/976-Modulo1951/976-Modulo1951/11_CRS02_CAP100.dta"
+
+crs02 <- read_dta(ruta3)
+
+# Declarar diseño muestral
+dis_crs02 <- svydesign(
+  ids = ~CONGLOME,
+  strata = ~AREA,
+  weights = ~FACTOR_VIV,
+  data = crs02,
+  nest = TRUE
+)
+
+# Ver resumen del diseño
+summary(dis_crs02) 
+
+```
+
+```{r}
+# Conteo expandido total
+svytotal(~I(1), dis_crs02)
+```
+
+#### Ejemplo de estimación:
+
+```{r}
+
+# Proporción de hogares con Internet
+if("C1P110_4" %in% names(crs02)){
+  internet_est <- svymean(~I(C1P110_4 == 1), design = dis_crs02, na.rm = TRUE)
+  internet_est
+  confint(internet_est)
+}
+
+```
+
+## 2.4. Declaración del diseño muestral – CRS.02 (Hombres y mujeres de 18 años a más)
+
+La encuesta **CRS.02** de la ENARES 2024 sigue el mismo esquema probabilístico y multietápico que la aplicada a mujeres (CRS.01). Su propósito es recoger información sobre experiencias y percepciones de violencia en hombres y mujeres de 18 años a más, garantizando representatividad nacional, departamental y por área urbana/rural.
+
+```{r}
+# Cargar librerías
+library(haven)
+library(survey)
+library(dplyr)
+
+# Cargar base de datos CRS.02 (Hombres y mujeres 18+)
+crs02 <- read_dta("C:/Users/FABIOLA/Downloads/ENARES/976-Modulo1953//976-Modulo1953/13_CRS02_CAP300.dta")
+
+# Declaración del diseño muestral
+dis_crs02 <- svydesign(
+  ids = ~CONGLOME,       # UPM
+  strata = ~AREA,         # Estrato: urbano / rural
+  weights = ~FACTOR_HYM,  # Factor de expansión individual
+  data = crs02,
+  nest = TRUE
+)
+
+# Resumen del diseño
+summary(dis_crs02)
+```
+
+#### Ejemplo de estimación:
+
+```{r}
+# Proporción de personas casadas o convivientes
+casados <- svymean(~I(C1P302 %in% c(1, 2)), design = dis_crs02, na.rm = TRUE)
+casados
+confint(casados)
+
+```
+
+## 2.5. Declaración del diseño muestral – CRS.03 (Niños de 9 a 11 años)
+
+Está dirigida a niñas y niños de 9 a 11 años matriculados en los niveles 4.º, 5.º y 6.º de primaria de instituciones educativas públicas y privadas.
+
+```{r}
+# Cargar paquetes
+library(haven)
+library(survey)
+
+# Cargar base CRS03 (niñas y niños 9–11 años)
+crs03 <- read_dta("C:/Users/FABIOLA/Downloads/ENARES/976-Modulo1956//976-Modulo1956/16_CRS03_CAP100.dta")
+
+# Crear variable de estrato combinando área y departamento
+crs03$ESTRATO <- interaction(crs03$AREA, crs03$CCDD, drop = TRUE)
+
+# Declarar el diseño muestral
+dis_crs03_cap100 <- svydesign(
+  ids = ~INED,             # Institución educativa como conglomerado (UPM)
+  strata = ~ESTRATO,       # Estratificación por área y departamento
+  weights = ~FACTOR_ALUMNOS,
+  data = crs03,
+  nest = TRUE
+)
+
+# Ver resumen del diseño
+summary(dis_crs03_cap100)
+```
+
+## 2.5. Declaración del diseño muestral – CRS.04 (adolescentes 12 a 17 años )
+
+Está dirigida a adolescentes de 12 a 17 años que cursan educación secundaria.
+
+```{r}
+# --- Cargar librerías ---
+library(haven)
+library(survey)
+
+# --- Cargar base CRS.04 ---
+crs04 <- read_dta("C:/Users/FABIOLA/Downloads/ENARES/976-Modulo1959//976-Modulo1959/19_CRS04_CAP100.dta")
+
+# --- Crear variable de estrato ---
+crs04$ESTRATO <- interaction(crs04$AREA, crs04$CCDD, drop = TRUE)
+
+# --- Declarar diseño muestral ---
+dis_crs04 <- svydesign(
+  ids = ~INED,               # UPM = institución educativa
+  strata = ~ESTRATO,         # estrato = área + departamento
+  weights = ~FACTOR_ALUMNOS, # ponderador
+  data = crs04,
+  nest = TRUE
+)
+
+# --- Verificar diseño ---
+summary(dis_crs04)
+
+```
+
+#### Ejemplo de estimación:
+
+```{r}
+# --- Ejemplo: proporción de estudiantes que declaran discusiones familiares (C3P123 == 1) ---
+if ("C3P123" %in% names(crs04)) {
+  disc_fam <- svymean(~I(C3P123 == 1), design = dis_crs04, na.rm = TRUE)
+  disc_fam
+  confint(disc_fam)
+}
+```
+
 # Parte IV
 
 Responda, en no más de 500 palabras, cada una de las siguientes preguntas.
