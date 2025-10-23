@@ -52,6 +52,193 @@ El muestreo aleatorio por conglomerados tiende a aumentar la precisión de las e
 
 # Parte II
 
+## 1. Utilice el Censo Nacional de Población y Vivienda 2017, filtrado para Lima Metropolitana que se ha subido a la carpeta de datos
+
+```{r}
+# Cargamos librerías
+if (!requireNamespace("pacman", quietly = TRUE)) install.packages("pacman")
+pacman::p_load(arrow, dplyr, survey)
+```
+
+```{r}
+# Utilizamos el Censo 2017 filtrado a Lima Metropolitana desde la carpeta de datos
+censo_2017 <- read_parquet("C:/Users/Hugo Jazyel/OneDrive/INEI/PEU-CD/Cursos especializados/4. Métodos de Estimación Estadística/Prácticas dirigidas/Datos/cpv2017_pob 1214 Lima.parquet")
+```
+
+## 2. Genere una variable dicotómica con el valor de 1 para quienes trabajan, y 0 para el resto de los casos. Llamar a esta variable “trabaja”
+
+```{r}
+# Generamos la variable 'trabaja' (1 = trabaja, 0 = no trabaja) a partir de 'c5_p16' (factor/ordenado)
+censo_2017 <- censo_2017 |>
+  mutate(
+    trabaja = case_when(
+      tolower(as.character(c5_p16)) %in% c("si, trabajó por algún pago") ~ 1,
+      tolower(as.character(c5_p16)) %in% c("no, trabajó por algún pago") ~ 0,
+      TRUE ~ NA_real_
+    )
+  )
+```
+
+## 3. Genere una variable numérica de la edad a partir de la variable “c5_p4_1” y llame a esta variable “edad”
+
+```{r}
+# Generamos 'edad' a partir de 'c5_p4_1' (factor/ordenado)
+censo_2017 <- censo_2017 |>
+  mutate(edad = if (is.numeric(c5_p4_1)) c5_p4_1 else
+           suppressWarnings(as.numeric(gsub("[^0-9]", "", c5_p4_1))))
+```
+
+## 4. Genere los grupos de edad “Menores de 15 años”, “15 a 30 años”, “30 a 65 años” y “Más de 65 años”. Llame a esta variable “grupo_edad”
+
+```{r}
+# Generamos 'grupo_edad' con 4 cortes (intervalos [a,b))
+censo_2017 <- censo_2017 |>
+  mutate(
+    grupo_edad = cut(
+      edad,
+      breaks = c(-Inf, 15, 30, 65, Inf),
+      labels = c("Menores de 15", "15 a 29", "30 a 64", "65 a más"),
+      right  = FALSE,
+      ordered_result = TRUE
+    )
+  )
+```
+
+## 5. Establezca una semilla (“seed”) usando los cuatro dígitos del año actual
+
+```{r}
+set.seed(2025)
+```
+
+## 6. Realice un muestreo estratificado para cada grupo de edad de la variable “trabaja”
+
+```{r}
+# Definimos el marco (considerando todas las edades y manteniendo NA como NA)
+base_all <- censo_2017
+
+# Calculamos tamaños poblacionales por estrato y total
+Nh_tab  <- table(base_all$grupo_edad)                 # N_h por grupo
+niveles <- levels(na.omit(base_all$grupo_edad))
+N       <- sum(Nh_tab)
+
+# Fijamos precisión y calculamos n por SRS usando la varianza observada s^2
+z <- 1.96   # 95% de confianza
+e <- 0.03   # 3 puntos porcentuales (para mayor precisión)
+p_hat <- mean(base_all$trabaja, na.rm = TRUE)
+s2    <- p_hat * (1 - p_hat)                          # varianza observada de 'trabaja'
+
+n0      <- (z^2 * s2) / (e^2)                         # SRS sin FPC
+n_total <- ceiling(n0 / (1 + (n0 - 1) / N))           # aplicamos FPC y redondeamos
+
+# Asignamos proporcional: n_h = n_total * (N_h / N) y ajustamos por redondeo
+prop_h  <- as.numeric(Nh_tab[niveles]) / N
+nh_raw  <- n_total * prop_h
+nh      <- floor(nh_raw)
+faltan  <- n_total - sum(nh)
+if (faltan > 0) {
+  ord <- order(nh_raw - nh, decreasing = TRUE)
+  nh[ord[seq_len(faltan)]] <- nh[ord[seq_len(faltan)]] + 1
+}
+names(nh) <- niveles
+
+# Seleccionamos sin reemplazo dentro de cada estrato
+idx_list <- lapply(niveles, function(g) which(base_all$grupo_edad == g)); names(idx_list) <- niveles
+idx_m    <- unlist(mapply(function(idx, nn) if (nn > 0) sample(idx, nn) else integer(0),
+                          idx_list, nh, SIMPLIFY = FALSE), use.names = FALSE)
+
+# Construimos la muestra y añadimos FPC por estrato (N_h)
+m_estrat <- base_all[idx_m, , drop = FALSE] |>
+  dplyr::mutate(fpc = as.numeric(Nh_tab[as.character(grupo_edad)]))
+```
+
+## 7. Declare el diseño muestral (completo) y obtenga las siguientes estadísticas (deben ser representativas):
+
+### a. El porcentaje de personas que trabajan para cada grupo de edad en Lima Metropolitana
+
+```{r}
+# Declaramos el diseño estratificado con FPC y estimamos el % que trabaja por grupo
+dis_prop <- survey::svydesign(ids = ~1, strata = ~grupo_edad, fpc = ~fpc, data = m_estrat)
+
+res_pct_grupo <- survey::svyby(~trabaja, ~grupo_edad, dis_prop, survey::svymean, na.rm = TRUE)
+
+out_pct <- res_pct_grupo |>
+  as.data.frame() |>
+  dplyr::transmute(
+    grupo_edad,
+    pct_trabaja = trabaja * 100,
+    se_pct      = se * 100
+  )
+
+# Mostramos tabla de asignación utilizada y resultados
+tabla_nh <- data.frame(
+  estrato = names(nh),
+  N_h     = as.integer(Nh_tab[names(nh)]),
+  n_h     = as.integer(nh),
+  prop_h  = round(100 * as.numeric(Nh_tab[names(nh)]) / N, 2),
+  row.names = NULL
+)
+print(tabla_nh)
+print(out_pct)
+```
+
+### b. El total de personas que trabajan en Lima Metropolitana
+
+```{r}
+# Para el total poblacional que trabaja, declaramos diseño con pesos w_h = N_h / n_h
+w_tab <- as.numeric(Nh_tab[niveles] / nh[niveles]); names(w_tab) <- niveles
+m_estrat_w <- dplyr::mutate(m_estrat, w = w_tab[as.character(grupo_edad)])
+
+dis_prop_w <- survey::svydesign(ids = ~1, strata = ~grupo_edad, weights = ~w, data = m_estrat_w)
+res_total  <- survey::svytotal(~trabaja, dis_prop_w, na.rm = TRUE)
+
+out_total <- data.frame(
+  total_trabaja = as.numeric(coef(res_total)),
+  se_total      = as.numeric(SE(res_total))
+)
+
+# Mostramos resultados
+print(out_total)
+```
+
+## 8. Calcule el efecto de diseño (deff) respecto a un MAS para ambas estimaciones. Comente
+
+```{r}
+# Calculamos el DEFF de 7a: porcentaje que trabaja por estrato (usamos dis_prop con FPC)
+deff_por_grupo <- sapply(niveles, function(g) {
+  est_g <- survey::svymean(~trabaja,
+                           subset(dis_prop, grupo_edad == g),
+                           na.rm = TRUE, deff = "srs")
+  tryCatch(as.numeric(survey::deff(est_g)), error = function(e) NA_real_)
+})
+
+# Armamos la tabla de deff por estrato (7a)
+deff_tab_7a <- data.frame(
+  grupo_edad = factor(names(deff_por_grupo), levels = niveles, ordered = TRUE),
+  deff       = as.numeric(deff_por_grupo),
+  row.names  = NULL
+)
+
+# Calculamos el DEFF de 7b: total de personas que trabajan (usamos dis_prop_w con pesos)
+res_total_deff <- survey::svytotal(~trabaja, dis_prop_w, na.rm = TRUE, deff = "srs")
+deff_total     <- as.numeric(survey::deff(res_total_deff))
+
+deff_tab_7b <- data.frame(
+  estimacion = "Total de personas que trabajan",
+  deff       = deff_total
+)
+
+# Mostramos resultados (7a por estrato y 7b total)
+print(deff_tab_7a)  # deff por estrato (7a)
+print(deff_tab_7b)  # deff global del total (7b)
+
+```
+
+Los resultados obtenidos permiten analizar el efecto de diseño en ambas estimaciones y valorar la eficiencia del muestreo aleatorio estratificado (MAE) proporcional respecto a un muestreo aleatorio simple (MAS) de igual tamaño. En primer lugar, para el porcentaje de personas que trabajan por grupo de edad, los valores del deff se aproximan a uno en todos los estratos. En los grupos de 15 a 29, 30 a 64 y 65 años a más el deff es exactamente igual a 1, mientras que en el grupo de menores de 15 alcanza un valor de 0.9978. Este comportamiento confirma que, dentro de cada estrato, el diseño se comporta prácticamente como un muestreo aleatorio simple con corrección por población finita, lo cual guarda coherencia con la propiedad de inocuidad del diseño, según la cual el muestreo aleatorio estratificado es al menos igual de eficiente que el muestreo aleatorio simple bajo el mismo tamaño muestral. En consecuencia, las varianzas bajo el diseño MAE y bajo el MAS resultan prácticamente equivalentes, aunque las pequeñas desviaciones de la unidad, como el 0.9978 en el primer grupo etario, evidencian una ligera ganancia que introduce el factor de corrección por población finita en el MAE.
+
+Por otra parte, al examinar el deff correspondiente al total de personas que trabajan en Lima Metropolitana, se obtiene un valor de 0.7757. Este resultado evidencia una ganancia de eficiencia del MAE respecto al MAS, ya que la varianza del estimador total bajo el diseño estratificado es aproximadamente un 22% menor que la que se obtendría en un MAS de igual tamaño. En términos del error estándar, la mejora equivale a una reducción cercana al 12%. Este efecto se debe a que, al combinar los estratos definidos por grupos de edad, el diseño logra aprovechar la heterogeneidad existente entre ellos, lo cual reduce la variabilidad global del estimador. Dicho de otro modo, aunque dentro de cada estrato el diseño se comporte de manera similar al MAS, la estructura estratificada permite una mayor precisión en la estimación del total al ponderar adecuadamente los grupos con diferentes proporciones de personas que trabajan.
+
+En conjunto, los resultados confirman que el muestreo aleatorio estratificado proporcional mantiene una eficiencia equivalente a la del MAS en las estimaciones dentro de los estratos, pero ofrece una ventaja clara cuando el interés se centra en parámetros globales. En este caso, el valor de deff menor que uno para el total de personas que trabajan demuestra que el diseño implementado es más eficiente que un muestreo simple del mismo tamaño, lo cual valida la pertinencia del procedimiento aplicado y la consistencia metodológica de los resultados obtenidos.
+
 # Parte III
 
 # Parte IV
@@ -91,3 +278,57 @@ Si se adopta un Deff conservador de 2,0, el tamaño de muestra requerido sería 
 
 En conclusión, la cifra de 1067 propuesta en Dillman es válida solo para un muestreo aleatorio simple y una estimación nacional. Un estudio que busque resultados representativos por región, mediante un diseño estratificado y bietápico, necesita una muestra mayor para compensar la pérdida de eficiencia causada por la correlación intraclúster y el efecto de diseño, garantizando así resultados estadísticamente confiables para la toma de decisiones públicas.
 :::
+
+## **Pregunta 2**
+
+Un policymaker que cuenta con conocimientos intermedios de estadística le pide que utilice la Encuesta Nacional Agropecuaria más reciente para obtener estadísticas distritales de acceso a asistencia técnica en agricultores de Ayacucho. Estos datos serán utilizados en el diseño de un programa público de apoyo a los productores. Explique al funcionario si esto es posible y por qué. Considere en su respuesta mencionar qué tipo de técnicas, modelos y bases de datos adicionales se podrían utilizar para obtener estimaciones en estos dominios menores (distritos).
+
+------------------------------------------------------------------------
+
+La Encuesta Nacional Agropecuaria (ENA) ha sido diseñada para generar estimaciones representativas a nivel nacional y departamental. Por tanto, no es posible obtener estadísticas precisas a nivel distrital. La muestra de la ENA se selecciona de forma aleatoria e independiente en cada departamento, eligiendo segmentos del territorio mediante un muestreo sistemático con un inicio aleatorio. Este diseño ocasiona que a nivel distrital, muchos distritos carezcan de cobertura muestral suficiente, lo que se traduce en altos coeficientes de variación e impide obtener estimaciones confiables sobre el acceso a la asistencia técnica de los agricultores en el departamento de Ayacucho.
+
+El código que se presenta a continuación realiza una simulación exploratoria con la ENA 2024, estimando la proporción de productores (personas naturales) que recibieron asistencia técnica en los últimos tres años. Los resultados muestran que varios departamentos presentan coeficientes de variación superiores al 15%, lo que evidencia que incluso a nivel departamental existen estimaciones con baja precisión estadística. En el caso de Ayacucho, el coeficiente de variación estimado es de 9.8 %. Asimismo, en la ENA 2024, de los 109 distritos del departamento, solo 11 cuentan con unidades muestrales seleccionadas, lo que refuerza la falta de representatividad a nivel distrital.
+
+Esta situación representa una limitación importante frente a los requerimientos del diseño del programa público en mención. No obstante, existen alternativas metodológicas para abordar este problema.
+
+1.  Desde el enfoque clásico de estimación basada en el diseño muestral, una opción sería rediseñar la muestra para permitir inferencia a nivel distrital, al menos para los distritos del departamento de Ayacucho. Esto implicaría incrementar el tamaño muestral, lo cual supondría un aumento considerable de los costos asociados al levantamiento de la información.
+
+2.  Existen métodos más avanzados, como la estimación en áreas menores, que utilizan la información de la encuesta combinada con bases de datos auxiliares para obtener inferencias en niveles más desagregados. Sin embargo, estos métodos suelen requerir fuentes auxiliares extensas y actualizadas, como los censos nacionales. En este caso, el único censo agropecuario disponible corresponde al año 2012, cuya antigüedad limita su utilidad.
+
+```{r}
+library(survey)
+library(tidyverse)
+library(haven)
+
+
+df <-read_dta('data/15_CAP700.dta') 
+
+# filtrando a productores agropecuarios - persona natural
+df_persona <- df |> 
+  filter(CODIGO==1)
+
+# Creando variable categorica de la variable P701
+# EN LOS ÚLTIMOS 3 AÑOS, DE ……………… A………………, ¿UD. HA RECIBIDO CAPACITACIÓN?
+
+df_persona$capacitacion <- ifelse(df_persona$P701==1,1,0)
+
+# Para modificar el error de un estrato con una sola PSU
+options(survey.lonely.psu = "certainty")
+
+# Diseño muestral
+diseño <- svydesign(
+  id = ~NSEGM,                 # identificador del segmento (PSU)
+  strata = ~ESTRATO,           # variable de estratificación
+  weights = ~FACTOR_PRODUCTOR, # factor de expansión
+  data = df_persona,
+  nest = TRUE
+)
+
+# Proporción de agricultores capacitados por departamento
+res <- svyby(~capacitacion, ~NOMBREDD, diseño, svymean, na.rm = TRUE)
+res <- res |> 
+  mutate(capacitacion=round(capacitacion*100,2),
+         se=round(se,4),
+         coef_v=round((res$se / res$capacitacion) * 100,2))
+res
+```
