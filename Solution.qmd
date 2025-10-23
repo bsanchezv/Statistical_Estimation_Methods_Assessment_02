@@ -26,7 +26,7 @@ Ejemplo 2: Deseamos hacer una encuesta de satisfacción de hogares que tienen se
 Rpta.
 
 | Dominio | Estrato |
-|------------------------------------|------------------------------------|
+|----|----|
 | Subdivisión de la población sobre el cual se obtienen resultados de forma desagregada | Subconjunto de la población que, en el ideal, son homogéneos por dentro y heterogéneos entre sí |
 | Se usa para obtener estimaciones específicas | Se usa para mejorar la precisión del muestreo, estimar de forma más precisa y reducir costos |
 | Suelen coincidir con áreas político-administrativas | Las unidades no están necesariamente en la misma área político-administrativa |
