@@ -277,29 +277,34 @@ Un policymaker que cuenta con conocimientos intermedios de estadística le pide 
 
 ------------------------------------------------------------------------
 
-La Encuesta Nacional Agropecuaria (ENA) ha sido diseñada para generar estimaciones representativas a nivel nacional y departamental. Por tanto, no es posible obtener estadísticas precisas a nivel distrital. La muestra de la ENA se selecciona de forma aleatoria e independiente en cada departamento, eligiendo segmentos del territorio mediante un muestreo sistemático con un inicio aleatorio. Este diseño ocasiona que a nivel distrital, muchos distritos carezcan de cobertura muestral suficiente, lo que se traduce en altos coeficientes de variación e impide obtener estimaciones confiables sobre el acceso a la asistencia técnica de los agricultores en el departamento de Ayacucho.
+La Encuesta Nacional Agropecuaria (ENA) ha sido diseñada para generar estimaciones a nivel nacional y departamental, lo que dificulta obtener estadísticas confiables a un nivel menor para el que ha sido diseñado, como el distrital. Esto se debe a que la muestra de la ENA se selecciona de manera sistematica en cada departamento, a partir de un punto de inicio aleatorio. Este diseño ocaciona que varios distritos carezcan de cobertura muestral suficiente, lo que se traduce en estimaciones con altos coeficientes de variación, o en la imposibilidad de generar estimaciones debido a la ausencia total de cobertura muestral en el distrito.
 
-El código que se presenta a continuación realiza una simulación exploratoria con la ENA 2024, estimando la proporción de productores (personas naturales) que recibieron asistencia técnica en los últimos tres años. Los resultados muestran que varios departamentos presentan coeficientes de variación superiores al 15%, lo que evidencia que incluso a nivel departamental existen estimaciones con baja precisión estadística. En el caso de Ayacucho, el coeficiente de variación estimado es de 9.8 %. Asimismo, en la ENA 2024, de los 109 distritos del departamento, solo 11 cuentan con unidades muestrales seleccionadas, lo que refuerza la falta de representatividad a nivel distrital.
+El código de linas abajo estima, a partir de la ENA 2024, la proporción de productores agropecuarios que recibieron asistencia técnica en los últimos tres años, a nivel departamental. Los resultados muestran un estimado con coeficiente de variación de 9.8% para Ayacucho, sin embargo varios departamentos presentan coeficientes de variación superiores al 15%, lo que evidencia que incluso a nivel departamental existen estimaciones con baja precisión estadística. Asimismo, según la ENA 2024, de los 109 distritos del departamento de Ayacucho, solo 11 cuentan con unidades muestrales seleccionadas, lo que refuerza la falta de representatividad a nivel distrital y la imposibilidad de obtener estadisticas distritales a partir de la ENA 2024.
 
-Esta situación representa una limitación importante frente a los requerimientos del diseño del programa público en mención. No obstante, existen alternativas metodológicas para abordar este problema.
+Frente a esta limitación, se pueden emplear las siguientes técnicas para su solución.
 
-1.  Desde el enfoque clásico de estimación basada en el diseño muestral, una opción sería rediseñar la muestra para permitir inferencia a nivel distrital, al menos para los distritos del departamento de Ayacucho. Esto implicaría incrementar el tamaño muestral, lo cual supondría un aumento considerable de los costos asociados al levantamiento de la información.
+1.  Desde el enfoque del diseño muestral, se plantea la posibilidad de sobremuestrear el departamento de ayacucho a fin de alcanzar un nivel de inferencia válido para sus distritos, sin embargo, esto implica el incremento de los costos de recolección de datos.
 
-2.  Existen métodos más avanzados, como la estimación en áreas menores, que utilizan la información de la encuesta combinada con bases de datos auxiliares para obtener inferencias en niveles más desagregados. Sin embargo, estos métodos suelen requerir fuentes auxiliares extensas y actualizadas, como los censos nacionales. En este caso, el único censo agropecuario disponible corresponde al año 2012, cuya antigüedad limita su utilidad.
+2.  Otra alternativa más eficiente corresponde a las técnicas de estimación en áreas menores (Small Area Estimation, SAE**)** que integran el enfoque basado en el diseño y el modelo. Para nuestro objetivo distinguiremos principalmente dos tipos de modelos:
+
+    -   **Modelos a nivel de área**: permiten estimar directamente la proporción de agricultores con acceso a asistencia técnica a nivel distrital. Un enfoque adecuado es el modelo binomial logit normal (BLN), dado que la variable de interés es una proporción. La implementación de este tipo de modelos requiere variables auxiliares disponibles a nivel distrital, que pueden provenir de la información estadistica agrícola del MIDAGRI; los registros administrativos de SENASA o programas de extensión agraria.
+
+    -   **Modelos a nivel de unidad**: permiten estimar la probabilidad de que cada productor haya recibido asistencia técnica. Un modelo comúnmente empleado es el de modelos lineales generalizados mixtos (GLMM), adecuado para variables binarias. En este caso, se requiere información a nivel productor, cuyas variables auxiliares pueden obtenerse del censo nacional agropecuario (CENAGRO 2012), que provee información estructural sobre productores, cultivos y acceso a asistencia técnica; el censo nacionales de población y vivienda (2017), que aportan variables socioeconómicas y demograficas relevantes de cada individuo. Además, el MIDAGRI cuenta con el padrón de productores agrarios que contiene información sobre politicas sectoriales que buca el crecimiento del productor, la cual puede proveer variables clave para fortalecer el modelo.
 
 ```{r}
 library(survey)
 library(tidyverse)
 library(haven)
 
+setwd('D:/CURSOS/CURSO INEI/PEU CD INEI/4_Metodos de estimacion estadistica/Tarea/973-Modulo1907')
 
-df <-read_dta('data/15_CAP700.dta') 
+df <-read_dta('15_CAP700.dta') 
 
-# filtrando a productores agropecuarios - persona natural
+# Filtro de productores agropecuarios - persona natural
 df_persona <- df |> 
   filter(CODIGO==1)
 
-# Creando variable categorica de la variable P701
+# Variable categorica (P701)
 # EN LOS ÚLTIMOS 3 AÑOS, DE ……………… A………………, ¿UD. HA RECIBIDO CAPACITACIÓN?
 
 df_persona$capacitacion <- ifelse(df_persona$P701==1,1,0)
@@ -318,9 +323,7 @@ diseño <- svydesign(
 
 # Proporción de agricultores capacitados por departamento
 res <- svyby(~capacitacion, ~NOMBREDD, diseño, svymean, na.rm = TRUE)
-res <- res |> 
+res |> 
   mutate(capacitacion=round(capacitacion*100,2),
-         se=round(se,4),
-         coef_v=round((res$se / res$capacitacion) * 100,2))
-res
+         cv=round((res$se / res$capacitacion) * 100,2))
 ```
