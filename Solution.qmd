@@ -9,28 +9,25 @@ editor: visual
 
 ## 1. Explique con sus propias palabras, ¿la población objetivo es igual a la población marco? ¿Por qué? ¿Por qué no? Utilice ejemplos no discutidos en clase.
 
-Rpta. No, porque la población objetivo son todas las unidades que se quiere estudiar; mientras que la población marco es un conjunto accesible de la población objetivo que tienen $P(\text{selección}) > 0$ en la muestra. En la práctica, no es posible acceder a toda la población objetivo.
+No, porque la población objetivo son todas las unidades que se quiere estudiar; mientras que la población marco es un conjunto accesible de la población objetivo que tienen $P(\text{selección}) > 0$ en la muestra.
 
-Ejemplo 1: Deseamos hacer una encuesta de satisfacción a los clientes de Yape
+Ejemplo 1: Encuesta de satisfacción a los clientes de Yape.
 
--   Población objetivo: Todos los usuarios de Yape
--   Población marco: Todos los usuarios de Yape de los cuales tengo su correo electrónico activo
+-   Población objetivo: Todos los usuarios de Yape.
+-   Población marco: Todos los usuarios de Yape con correo electrónico activo.
 
-Ejemplo 2: Deseamos hacer una encuesta de satisfacción de hogares que tienen servicio de internet
+Ejemplo 2: Encuesta de satisfacción de hogares que tienen servicio de internet.
 
--   Población objetivo: Todos los hogares del Perú que tienen servicio de internet
--   Población marco: La lista de los hogares con servicio de internet registradas en las empresas proveedoras
+-   Población objetivo: Todos los hogares del Perú que tienen servicio de internet.
+-   Población marco: Todos los hogares con servicio de internet registradas en las empresas proveedoras.
 
 ## 2. Explique con sus propias palabras las diferencias entre dominio y estrato. Utilice ejemplos no discutidos durante las clases teóricas.
 
-Rpta.
-
 | Dominio | Estrato |
-|----|----|
-| Subdivisión de la población sobre el cual se obtienen resultados de forma desagregada | Subconjunto de la población que, en el ideal, son homogéneos por dentro y heterogéneos entre sí |
-| Se usa para obtener estimaciones específicas | Se usa para mejorar la precisión del muestreo, estimar de forma más precisa y reducir costos |
-| Suelen coincidir con áreas político-administrativas | Las unidades no están necesariamente en la misma área político-administrativa |
-| Después de hacer la encuesta, es el grupo para el cual podemos decir algo | Es parte del diseño |
+|------------------------------------|------------------------------------|
+| Subdivisión de la población con resultados desagregados | Subconjunto de la población que, en el ideal, son homogéneos por dentro y heterogéneos entre sí |
+| Permite estimaciones específicas | Mejora la precisión del muestreo, permite estimar de forma más precisa y reducir costos |
+| Suele coincidir con áreas político-administrativas | No necesariamente coincide con áreas político-administrativas |
 
 Ejemplo 1: Distinguir según niveles de ingreso
 
@@ -41,14 +38,6 @@ Ejemplo 2: Evaluar el acceso a servicios de salud
 
 -   Dominio: Tipos de establecimiento (Hospital, centro de salud, posta)
 -   Estrato: Grupos etarios (infantes, niños, adultos, adultos mayores)
-
-## 3. ¿Qué esperaría que ocurra con la varianza de una variable cuando se aplique un muestreo aleatorio estratificado (MAE) en lugar de un muestreo aleatorio simple (MAS)? ¿Por qué?
-
-Cuando se aplique un MAE en lugar de un MAS, se esperaría que la varianza de la variable disminuya o, en el peor de los casos, sea igual. Esto debido a que los estratos son homogéneos por dentro, es decir, las unidades son similares y, por lo tanto, hay menos variabilidad dentro de cada estrato.
-
-## 4. ¿En qué caso el muestreo aleatorio por conglomerados tiende a aumentar la precisión de las estimaciones?
-
-El muestreo aleatorio por conglomerados tiende a aumentar la precisión de las estimaciones en el caso *ideal* en que los conglomerados sean heterogéneos al interior y homogéneos entre ellos. En la práctica, ocurre lo contrario.
 
 # Parte II
 
